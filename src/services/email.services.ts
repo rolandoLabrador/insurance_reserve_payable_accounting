@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs';
 import sgMail from '@sendgrid/mail';
 
 export class EmailService {
@@ -13,6 +13,7 @@ export class EmailService {
     
     const msg = {
       to: process.env.NOTIFICATION_EMAIL!,
+      cc: process.env.CC_EMAIL,
       from: process.env.SYSTEM_SENDER_EMAIL!,
       subject: 'Insurance Remittance Payable Report',
       text: 'Please find the attached Insurance Remittance Payable Report.',

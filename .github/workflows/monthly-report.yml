@@ -1,0 +1,33 @@
+name: Monthly Insurance Remittance Report
+
+on:
+  schedule:
+    # Runs at 00:00 UTC on the 1st of every month
+    - cron: '0 0 1 * *'
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+
+jobs:
+  generate-and-email-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Generate and Send Report
+        run: npx tsx src/index.ts
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+          CC_EMAIL: ${{ secrets.CC_EMAIL }}
+          SYSTEM_SENDER_EMAIL: ${{ secrets.SYSTEM_SENDER_EMAIL }}
